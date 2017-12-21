@@ -6,6 +6,21 @@ const keys = require('../config/keys');
 // get the users model from mongoose
 const User = mongoose.model('users');
 
+// set up serialization of user
+passport.serializeUser((user, done) => {
+  console.log('<<<<<<<<<<<<<<<<<<<<<<<serializing<<<<<<<<<<<<<<<<<<<<<<<<');
+  done( null, user.id )
+});
+
+// set up deserialization of user
+passport.deserializeUser((id, done) => {
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>deserializing>>>>>>>>>>>>>>>>>>>>>>>>');
+  User.findById(id)
+    .then(user => {
+      done(null, user);
+    });
+});
+
 // set up google Oauth with passport
 passport.use(
   new GoogleStrategy(
@@ -15,7 +30,18 @@ passport.use(
       callbackURL: '/auth/google/callback'
     },
     ( accessToken, refreshToken, profile, done ) => {
-      new User({ googleId: profile.id }).save();
+      User.findOne({ googleId: profile.id })
+        .then(existingUser => {
+          if ( existingUser ) {
+            // already have a record with the given prifile ID
+            done( null, existingUser );
+          } else {
+            // we don't have a user record with the prifile ID
+            new User({ googleId: profile.id })
+              .save()
+              .then(newUser => done( null, newUser ));
+          }
+        });
     }
   )
 );
