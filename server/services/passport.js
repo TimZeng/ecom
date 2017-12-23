@@ -30,19 +30,31 @@ passport.use(
       callbackURL: '/auth/google/callback',
       proxy: true // trust proxy for google authentication
     },
-    ( accessToken, refreshToken, profile, done ) => {
-      User.findOne({ googleId: profile.id })
-        .then(existingUser => {
-          if ( existingUser ) {
-            // already have a record with the given prifile ID
-            done( null, existingUser );
-          } else {
-            // we don't have a user record with the prifile ID
-            new User({ googleId: profile.id })
-              .save()
-              .then(newUser => done( null, newUser ));
-          }
-        });
+    // ( accessToken, refreshToken, profile, done ) => {
+    //   User.findOne({ googleId: profile.id })
+    //     .then(existingUser => {
+    //       if ( existingUser ) {
+    //         // already have a record with the given prifile ID
+    //         done( null, existingUser );
+    //       } else {
+    //         // we don't have a user record with the prifile ID
+    //         new User({ googleId: profile.id })
+    //           .save()
+    //           .then(newUser => done( null, newUser ));
+    //       }
+    //     });
+    // }
+
+    // refactor for async/await syntax
+    async ( accessToken, refreshToken, profile, done ) => {
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if ( existingUser ) {
+        return done( null, existingUser );
+      }
+
+      const newUser = await new User({ googleId: profile.id }).save();
+      done( null, newUser );
     }
   )
 );
