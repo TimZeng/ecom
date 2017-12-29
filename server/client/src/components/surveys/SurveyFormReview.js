@@ -1,7 +1,6 @@
 // SurveyFormReview shows users their form inputs for review
 import React from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 // withRouter is helper provided by react-router
 // to pass the hisotry object to a component through props
