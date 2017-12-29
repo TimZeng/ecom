@@ -30,7 +30,6 @@ class SurveyList extends Component {
   }
 
   render() {
-    console.log(this.props.surveys);
     return (
       <div>
         { this.renderSurveys() }
