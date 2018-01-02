@@ -1,6 +1,10 @@
 const path = require('path');
+const merge = require('webpack-merge');
+const baseConfig = require('./webpack.base.js');
+const webpackNodeExternals = require('webpack-node-externals');
 
-module.exports = {
+// this is the webpack configuration for SERVER only
+const config = {
   // Inform webpack that we'r building a bundle for nodeJS, rather than for the browser
   target: 'node',
 
@@ -13,22 +17,11 @@ module.exports = {
     path: path.resolve(__dirname, 'build')
   },
 
-  // Tell webpack to run babel on every file it runs through
-  module: {
-    rules: [
-      {
-        // only run javascript files
-        test: /\.js?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        options: {
-          presets: [
-            'react',  // for react
-            'stage-0', // for async operations
-            ['env', { targets: { browsers: ['last 2 versions'] }}]
-          ]
-        }
-      }
-    ]
-  }
+  // exclude node_module modules from server bundle
+  // to reduce server side bundle size
+  // and we can import node modules at run-time
+  externals: [webpackNodeExternals()]
 };
+
+// merge server specific config with base config
+module.exports = merge(baseConfig, config);
