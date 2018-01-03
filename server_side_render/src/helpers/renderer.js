@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 // serialize is to handle cross-site-script attack
 import serialize from 'serialize-javascript';
+import { Helmet } from 'react-helmet';
 import Routes from '../client/Routes';
 
 export default (req, store, context) => {
@@ -24,9 +25,17 @@ export default (req, store, context) => {
     </Provider>
   );
 
+  // the helmet instance is pulling all tags we loaded into Helmet
+  // within react components
+  // we can insert all the tags into the head tag manually below
+  const helmet = Helmet.renderStatic();
+
   return `
     <html>
-      <head></head>
+      <head>
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
+      </head>
       <body>
         <div id='root'>${content}</div>
         <script>

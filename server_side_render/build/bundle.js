@@ -581,6 +581,8 @@ var _reactRedux = __webpack_require__(3);
 
 var _actions = __webpack_require__(1);
 
+var _reactHelmet = __webpack_require__(28);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -614,12 +616,30 @@ var UsersList = function (_Component) {
         );
       });
     }
+
+    // this function is to load tags into the head tag of our HTML document
+
+  }, {
+    key: 'head',
+    value: function head() {
+      return _react2.default.createElement(
+        _reactHelmet.Helmet,
+        null,
+        _react2.default.createElement(
+          'title',
+          null,
+          this.props.users.length + ' users loaded'
+        ),
+        _react2.default.createElement('meta', { property: 'og:title', content: 'Users App' })
+      );
+    }
   }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         null,
+        this.head(),
         'Here is a big list of users:',
         _react2.default.createElement(
           'ul',
@@ -678,13 +698,14 @@ var _serializeJavascript = __webpack_require__(17);
 
 var _serializeJavascript2 = _interopRequireDefault(_serializeJavascript);
 
+var _reactHelmet = __webpack_require__(28);
+
 var _Routes = __webpack_require__(4);
 
 var _Routes2 = _interopRequireDefault(_Routes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// serialize is to handle cross-site-script attack
 exports.default = function (req, store, context) {
   // use renderToString to create HTML and pass to client
   var content = (0, _server.renderToString)(_react2.default.createElement(
@@ -708,8 +729,14 @@ exports.default = function (req, store, context) {
     )
   ));
 
-  return '\n    <html>\n      <head></head>\n      <body>\n        <div id=\'root\'>' + content + '</div>\n        <script>\n          window.INITIAL_STATE = ' + (0, _serializeJavascript2.default)(store.getState()) + '\n        </script>\n        <script src=\'bundle.js\'></script>\n      </body>\n    </html>\n  ';
+  // the helmet instance is pulling all tags we loaded into Helmet
+  // within react components
+  // we can insert all the tags into the head tag manually below
+  var helmet = _reactHelmet.Helmet.renderStatic();
+
+  return '\n    <html>\n      <head>\n        ' + helmet.title.toString() + '\n        ' + helmet.meta.toString() + '\n      </head>\n      <body>\n        <div id=\'root\'>' + content + '</div>\n        <script>\n          window.INITIAL_STATE = ' + (0, _serializeJavascript2.default)(store.getState()) + '\n        </script>\n        <script src=\'bundle.js\'></script>\n      </body>\n    </html>\n  ';
 };
+// serialize is to handle cross-site-script attack
 
 /***/ }),
 /* 16 */
@@ -1105,6 +1132,12 @@ exports.default = function (ChildComponent) {
   // return the HOC component
   return (0, _reactRedux.connect)(mapStateToProps)(RequireAuth);
 };
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = require("react-helmet");
 
 /***/ })
 /******/ ]);

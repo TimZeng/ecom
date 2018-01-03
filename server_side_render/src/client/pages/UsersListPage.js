@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchUsers } from '../actions';
+import { Helmet } from 'react-helmet';
 
 class UsersList extends Component {
   componentDidMount() {
@@ -13,9 +14,20 @@ class UsersList extends Component {
     });
   }
 
+  // this function is to load tags into the head tag of our HTML document
+  head() {
+    return (
+      <Helmet>
+        <title>{ `${this.props.users.length} users loaded` }</title>
+        <meta property='og:title' content='Users App' />
+      </Helmet>
+    )
+  }
+
   render() {
     return (
       <div>
+        { this.head() }
         Here is a big list of users:
         <ul>
           { this.renderUsers() }
