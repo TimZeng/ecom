@@ -7,17 +7,17 @@ import { renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import Routes from '../client/Routes';
 
-export default (req, store) => {
+export default (req, store, context) => {
   // use renderToString to create HTML and pass to client
   const content = renderToString(
-    <Provider store={store}>
+    <Provider store={ store }>
       <StaticRouter
         // location is used to tell react router
         // which route the client is trying to access
         // BrowserRouter can directly read the url in the browser
         // BUT StaticRouter cannot, so we have to pass in location
         location={ req.path }
-        context={ {} }
+        context={ context }
       >
         <div>{ renderRoutes( Routes ) }</div>
       </StaticRouter>
@@ -30,7 +30,7 @@ export default (req, store) => {
       <body>
         <div id='root'>${content}</div>
         <script>
-          window.INITIAL_STATE = ${serialize(store.getState())}
+          window.INITIAL_STATE = ${ serialize( store.getState() ) }
         </script>
         <script src='bundle.js'></script>
       </body>

@@ -2,7 +2,9 @@ import React from 'react';
 // import { Route } from 'react-router-dom';
 import App from './App';
 import HomePage from './pages/HomePage';
-import UsersListPage, { loadData } from './pages/UsersListPage';
+import NotFoundPage from './pages/NotFoundPage';
+import UsersListPage from './pages/UsersListPage';
+import AdminsListPage from './pages/AdminsListPage';
 
 /*
  * Traditional react router setup:
@@ -33,6 +35,14 @@ export default [
         ...UsersListPage,
         path: '/users',
         exact: true
+      },
+      {
+        ...AdminsListPage,
+        path: '/admins',
+        exact: true
+      },
+      {
+        ...NotFoundPage
       }
     ]
   }
