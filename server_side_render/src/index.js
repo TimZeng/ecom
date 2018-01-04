@@ -10,12 +10,13 @@ const app = express();
 
 // setup proxy
 // send any request for /api to api server
-app.use('/api', proxy('http://react-ssr-api.herokuapp.com', {
+// app.use('/api', proxy('http://react-ssr-api.herokuapp.com', {
+app.use('/api', proxy('http://localhost:5000', {
   // for handling google oauth flow
-  proxyReqOptDecorator(opts) {
-    opts.headers['x-forwarded-host'] = 'localhost:3000';
-    return opts;
-  }
+  // proxyReqOptDecorator(opts) {
+  //   opts.headers['x-forwarded-host'] = 'localhost:3000';
+  //   return opts;
+  // }
 }));
 
 // serving the public folder for any file request

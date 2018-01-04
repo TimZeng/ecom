@@ -1,19 +1,24 @@
-export const FETCH_USERS = 'fetch_users';
-export const FETCH_CURRENT_USER = 'fetch_current_user';
-export const FETCH_ADMINS = 'fetch_admins';
+export const FETCH_USER = 'FETCH_USER';
+export const FETCH_SURVEYS = 'FETCH_SURVEYS';
 
 // api is the customized axios instance passed in by redux-thunk
-export const fetchUsers = () => async ( dispatch, getState, api ) => {
-  const res = await api.get('/users');
-  dispatch({ type: FETCH_USERS, payload: res });
+export const fetchUser = () => async ( dispatch, getState, api ) => {
+  const res = await api.get('/api/current_user');
+  dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const fetchCurrentUser = () => async ( dispatch, getState, api ) => {
-  const res = await api.get('/current_user');
-  dispatch({ type: FETCH_CURRENT_USER, payload: res });
+export const handleToken = token => async ( dispatch, getState, api ) => {
+  const res = await api.post('/api/stripe', token);
+  dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const fetchAdmins = () => async ( dispatch, getState, api ) => {
-  const res = await api.get('/admins');
-  dispatch({ type: FETCH_ADMINS, payload: res });
+export const submitSurvey = (values, history) => async ( dispatch, getState, api ) => {
+  const res = await api.post('/api/surveys', values);
+  history.push('/surveys');
+  dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const fetchSurvey = () => async ( dispatch, getState, api ) => {
+  const res = await api.get('/api/surveys');
+  dispatch({ type: FETCH_SURVEYS, payload: res.data });
 };

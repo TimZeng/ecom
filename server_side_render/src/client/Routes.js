@@ -3,8 +3,8 @@ import React from 'react';
 import App from './App';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
-import UsersListPage from './pages/UsersListPage';
-import AdminsListPage from './pages/AdminsListPage';
+import SurveysPage from './pages/SurveysPage';
+import SurveyNew from './components/surveys/SurveyNew';
 
 /*
  * Traditional react router setup:
@@ -32,13 +32,13 @@ export default [
         exact: true
       },
       {
-        ...UsersListPage,
-        path: '/users',
+        ...SurveysPage,
+        path: '/surveys',
         exact: true
       },
       {
-        ...AdminsListPage,
-        path: '/admins',
+        ...SurveyNew,
+        path: '/surveys/new',
         exact: true
       },
       {
