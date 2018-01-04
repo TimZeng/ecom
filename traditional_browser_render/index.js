@@ -19,6 +19,11 @@ app.use(bodyParser.json());
  * Oauth set up with passport and cookie-session
  ***********************************************************************/
 
+app.use((req, res, next) => {
+  console.log(`Serving ${req.method} request on ${req.url}, ${req.get('cookie') || 'no cookie'}`);
+  next();
+});
+
 // cookie configuration
 app.use(cookieSession({
   maxAge: 30 * 24 * 60 * 60 * 1000, // time that cookie can exist before expired
